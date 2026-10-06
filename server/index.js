@@ -1,10 +1,16 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
+//
 const testRouter = require("./routes/test");
 require("dotenv").config();
+app.use("/test", testRouter);
+//
 const connectDB = require("./db");
-
-app.use(express.json());
+//
+const userRouter = require("./routes/users");
+app.use("/users", userRouter);
+//
 
 app.use((req, res, next)=>{
     req.myname = 'V';
@@ -17,10 +23,9 @@ app.get("/health", (req,res)=>{
     })
 });
 
-app.use("/test", testRouter);
-
+//
 connectDB();
-
+//
 app.listen(3000, ()=>{
     console.log("server running on port 3000")
 });

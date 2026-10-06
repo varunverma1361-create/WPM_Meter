@@ -1,5 +1,7 @@
 const express = require("express");
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const auth = require("../middleware/auth");
 
 const bcrypt = require("bcrypt");
 
@@ -24,6 +26,7 @@ router.post("/", async (req,res)=>{
         res.json({
         message: "User created"
         })
+
     } catch (error){
         return res.status(500).json({
             message: "An error occured"
@@ -31,7 +34,7 @@ router.post("/", async (req,res)=>{
     }
     
 });
-
+//login- first checks if user exists, if yes then generates a jwt token for them
 router.post("/login", async (req,res)=>{
     const userEmail = req.body.email;
     const userPassword = req.body.password;
@@ -54,12 +57,44 @@ router.post("/login", async (req,res)=>{
             })
         }
 
+        const token = jwt.sign(
+            {userId: user._id},
+            process.env.JWT_SECRET
+        );
+
         res.json({
-            message: "Login successful"
+            message: "Login successful",
+            token
         })
+
     } catch(error){
         res.status(500).json({
-            message: "DB error occurred"
+            message: "DB error occurred",
+        })
+    }
+})
+//uses the auth middleware which verifies the jwt token
+router.get("/profile", auth, async (req,res)=>{
+    try{
+        const userId = req.userId;
+        const user = await User.findOne({
+            _id : userId
+        })
+
+        if(!user){
+            return res.status(404).json({
+                message: "User not found"
+            })
+        }
+
+        return res.json({
+            name: user.name,
+            email: user.email
+        })
+
+    } catch(error){
+        res.status(500).json({
+            message: "Database error"
         })
     }
 })

@@ -11,6 +11,8 @@ const connectDB = require("./db");
 const userRouter = require("./routes/users");
 app.use("/users", userRouter);
 //
+const userTestResultRouter = require("./routes/results");
+app.use("/results", userTestResultRouter);
 
 app.use((req, res, next)=>{
     req.myname = 'V';

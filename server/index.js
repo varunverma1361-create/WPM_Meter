@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 //
+const cors = require("cors");
+app.use(cors());
+//
 const testRouter = require("./routes/test");
 require("dotenv").config();
 app.use("/test", testRouter);
@@ -13,11 +16,12 @@ app.use("/users", userRouter);
 //
 const userTestResultRouter = require("./routes/results");
 app.use("/results", userTestResultRouter);
+//
 
-app.use((req, res, next)=>{
-    req.myname = 'V';
-    next();
-})
+// app.use((req, res, next)=>{
+//     req.myname = 'V';
+//     next();
+// })
 
 app.get("/health", (req,res)=>{
     res.json({

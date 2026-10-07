@@ -62,7 +62,7 @@ export default function TypingArea(){
             <textarea
             value={userInput}
             onChange={handleInputChange}
-            disables={isCompleted}
+            disabled={isCompleted}
             placeholder={isCompleted ? "Test Completed!" : "Start typing here"}
             rows={4}
             />

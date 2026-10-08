@@ -5,7 +5,11 @@ export default function ResultHistory() {
 
     async function fetchResults() {
         const token = localStorage.getItem("token");
-
+        if(!token){
+            console.log("Please login first");
+            return;
+        }
+        
         const response = await fetch("http://localhost:3000/results", {
             method: "GET",
             headers: {

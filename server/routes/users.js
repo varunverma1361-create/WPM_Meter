@@ -24,7 +24,7 @@ router.post("/", async (req,res)=>{
 
         await user.save();  //user create krne ke baad you have to save it in ur DB
 
-        const token = jwt.sign({userId: user._Id}, process.env.JWT_SECRET);
+        const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET);
 
         res.json({
             message: "User created",

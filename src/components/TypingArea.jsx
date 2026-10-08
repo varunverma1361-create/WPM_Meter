@@ -10,11 +10,18 @@ import {
 import { charStatusListState, isCompletedState, wpmState, accuracyState } from '../state/selectors';
 
 async function saveTestResult(wpm, accuracy, timeTaken){
+
+    const token = localStorage.getItem("token");
+    if(!token){
+            console.log("Please login first");
+            return;
+        }
+        
   const response = await fetch("http://localhost:3000/results",{
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YWM0ODBmMGE2OWE1MGM4OWNjNDE0ZTciLCJpYXQiOjE3OTEyNjM3Mzl9.qHuBEtpYNiiNa3Amd25Cj-MO6SMB9KfD3Eiz99cu7Q0`
+      "Authorization": `Bearer ${token}`
     },
     body: JSON.stringify({
       wpm,

@@ -5,7 +5,10 @@ export default function DashboardStats(){
 
     async function fetchStats(){
         const token = localStorage.getItem("token");
-
+        if(!token){
+            console.log("Please login first");
+            return;
+        }
         const response = await fetch("http://localhost:3000/results/stats", {
             method: "GET",
             headers: {

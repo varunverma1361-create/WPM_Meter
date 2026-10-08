@@ -9,6 +9,9 @@ import {targetTextState, userInputState, startTimeState, endTimeState} from './s
 import DashboardStats from './components/DashboardStats'
 import ResultHistory from './components/ResultHistory';
 import Login from './components/Login';
+import Signup from './components/Signup';
+import Logout from './components/Logout';
+import Profile from './components/Profile'
 
 function App() {
   const targetText = useRecoilValue(targetTextState);
@@ -20,6 +23,9 @@ function App() {
         <TypingArea/>
         <Controls/>
         <Login/>
+        <Signup/>
+        <Logout/>
+        <Profile/>
         <DashboardStats/>
         <ResultHistory />
       </div>

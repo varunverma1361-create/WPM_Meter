@@ -6,7 +6,7 @@ const auth = require("../middleware/auth");
 const bcrypt = require("bcrypt");
 
 const router = express.Router();
-//signup (user gets created, password hashed and stored in mongoDB)
+//signup (user gets created, password hashed and stored in mongoDB then logs in user by creating and sending jwt token)
 router.post("/", async (req,res)=>{
     const userName = req.body.name;
     const userEmail = req.body.email;
@@ -23,8 +23,12 @@ router.post("/", async (req,res)=>{
         });
 
         await user.save();  //user create krne ke baad you have to save it in ur DB
+
+        const token = jwt.sign({userId: user._Id}, process.env.JWT_SECRET);
+
         res.json({
-        message: "User created"
+            message: "User created",
+            token
         })
 
     } catch (error){

@@ -7,7 +7,25 @@ import {
   startTimeState,
   endTimeState,
 } from '../state/atoms';
-import { charStatusListState, isCompletedState } from '../state/selectors';
+import { charStatusListState, isCompletedState, wpmState, accuracyState } from '../state/selectors';
+
+async function saveTestResult(wpm, accuracy, timeTaken){
+  const response = await fetch("http://localhost:3000/results",{
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YWM0ODBmMGE2OWE1MGM4OWNjNDE0ZTciLCJpYXQiOjE3OTEyNjM3Mzl9.qHuBEtpYNiiNa3Amd25Cj-MO6SMB9KfD3Eiz99cu7Q0`
+    },
+    body: JSON.stringify({
+      wpm,
+      accuracy,
+      timeTaken
+    })
+  })
+
+  const data = await response.json();
+  console.log(data);
+}
 
 export default function TypingArea(){
     const [userInput, setUserInput] = useRecoilState(userInputState);
@@ -18,6 +36,9 @@ export default function TypingArea(){
     const charStatusList = useRecoilValue(charStatusListState);
     const isCompleted = useRecoilValue(isCompletedState);
 
+    const wpm = useRecoilValue(wpmState);
+    const accuracy = useRecoilValue(accuracyState);
+
     const handleInputChange = (e)=>{
         const value = e.target.value;
 
@@ -27,10 +48,16 @@ export default function TypingArea(){
             setStartTime(Date.now());
         }
 
-        if(value.length === targetText.length){
-            setEndTime(Date.now());
-        }
         setUserInput(value);
+
+        if(value.length === targetText.length){
+            const completedAt = Date.now();
+            setEndTime(completedAt);
+
+            const timeTaken = (completedAt-startTime)/1000;
+
+            saveTestResult(wpm, accuracy, timeTaken);
+        }
     }
 
     const getCharStyle = (status) => {
@@ -49,7 +76,7 @@ export default function TypingArea(){
     return (
 
         <div>
-            /*char stream display*/
+            {/*char stream display*/}
             <div>
                 {charStatusList.map((item, index) => (
                     <span key={index} style={getCharStyle(item.status)}>
@@ -58,7 +85,7 @@ export default function TypingArea(){
                 ))}
             </div>
 
-            /*input area*/
+            {/*input area*/}
             <textarea
             value={userInput}
             onChange={handleInputChange}

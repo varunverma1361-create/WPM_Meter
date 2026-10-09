@@ -1,9 +1,12 @@
 import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function Signup(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const navigate = useNavigate();
+
 
     async function handleSignup(){
         const response = await fetch("http://localhost:3000/users",{
@@ -23,6 +26,8 @@ export default function Signup(){
         if(data.token){
             localStorage.setItem("token", data.token);
             console.log("Signup successfull, token saved");
+
+            navigate("/test");
         }
     }
 

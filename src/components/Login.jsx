@@ -1,8 +1,11 @@
 import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
+
 
 export default function Login(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     async function handleLogin(){
         const response = await fetch("http://localhost:3000/users/login", {
@@ -21,6 +24,8 @@ export default function Login(){
         if(data.token){
             localStorage.setItem("token", data.token);
             console.log("Login successful, token saved");
+
+            navigate("/test");
         }
     }
 

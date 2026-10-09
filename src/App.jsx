@@ -1,34 +1,22 @@
-//import React from 'react';
-//import { RecoilRoot } from 'recoil';
-import StatsDisplay from './components/StatsDisplay';
-import TypingArea from './components/TypingArea';
-import Controls from './components/Controls';
-import {useRecoilValue} from 'recoil'
-import {targetTextState, userInputState, startTimeState, endTimeState} from './state/atoms'
-//import {isCompletedState, correctCharCountState, accuracyState, wpmState, charStatusListState} from './state/selectors.js'
-import DashboardStats from './components/DashboardStats'
-import ResultHistory from './components/ResultHistory';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import Logout from './components/Logout';
-import Profile from './components/Profile'
+import ProfilePage from "./pages/ProfilePage";
+import StatsPage from "./pages/StatsPage";
+import HistoryPage from "./pages/HistoryPage";
+import AuthPage from "./pages/AuthPage";
+import TestPage from "./pages/TestPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+import {Routes, Route} from "react-router-dom"
 
 function App() {
-  const targetText = useRecoilValue(targetTextState);
   return (
     <>
-      <div>
-        <h1>Typing Speed Tester</h1>
-        <StatsDisplay/>
-        <TypingArea/>
-        <Controls/>
-        <Login/>
-        <Signup/>
-        <Logout/>
-        <Profile/>
-        <DashboardStats/>
-        <ResultHistory />
-      </div>
+      <Routes>
+        <Route path="/" element={<AuthPage/>}></Route>
+        <Route path="/test" element={<ProtectedRoute><TestPage/></ProtectedRoute>}></Route>
+        <Route path="/profile" element={<ProtectedRoute><ProfilePage/></ProtectedRoute>}></Route>
+        <Route path="/stats" element={<ProtectedRoute><StatsPage/></ProtectedRoute>}></Route>
+        <Route path="/history" element={<ProtectedRoute><HistoryPage/></ProtectedRoute>}></Route>
+      </Routes>
     </>
   )
 }

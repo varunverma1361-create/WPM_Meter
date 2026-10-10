@@ -1,35 +1,33 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { apiRequest } from "../api";
 
 export default function ResultHistory() {
-    const [history, setHistory] = useState([]);
+    const [history, setHistory] = useState(null);
+    const navigate = useNavigate();
 
     async function fetchResults() {
-        const token = localStorage.getItem("token");
-        if(!token){
-            console.log("Please login first");
-            return;
-        }
-        
-        const response = await fetch("http://localhost:3000/results", {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        });
+        const data = await apiRequest("/results",{
+            method: "GET"
+        }, navigate);
 
-        const data = await response.json();
+        if(!data) return;
 
         setHistory(data.testResults);
     }
 
+    useEffect(()=>{
+        fetchResults();
+    },[]);
+
     return (
         <div>
-            <button onClick={fetchResults}>
-                Load History
-            </button>
-
-            <div>
-                {history.map((result) => (
+            {history === null ? (
+                <div>Loading history...</div>
+            ) : history.length === 0 ? (
+                <div>No test history yet. Complete a typing test first.</div>
+            ) : (
+                history.map((result) => (
                     <div key={result._id}>
                         <div>WPM: {result.wpm}</div>
                         <div>Accuracy: {result.accuracy}</div>
@@ -37,8 +35,8 @@ export default function ResultHistory() {
                         <div>Date: {new Date(result.createdAt).toLocaleString()}</div>
                         <hr />
                     </div>
-                ))}
-            </div>
+                ))
+            )}
         </div>
     );
 }

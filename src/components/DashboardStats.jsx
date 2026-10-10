@@ -1,36 +1,39 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+import { apiRequest } from "../api";
 
 export default function DashboardStats(){
     const [stats, setStats] = useState(null);
+    const navigate = useNavigate();
 
     async function fetchStats(){
-        const token = localStorage.getItem("token");
-        if(!token){
-            console.log("Please login first");
-            return;
-        }
-        const response = await fetch("http://localhost:3000/results/stats", {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-        
-        const data = await response.json();
+        const data = await apiRequest("/results/stats", {
+            method: "GET"
+        }, navigate);
+
+        if(!data) return;
+
         setStats(data);
     }
 
-    return(
+    useEffect(()=>{
+        fetchStats();
+    }, []);
+
+    return (
         <>
-        <button onClick={fetchStats}>Load Stats</button>
-        {stats && (
-            <div>
-                <div>Total Tests: {stats.totalTests}</div>
-                <div>Best Wpm: {stats.bestWpm}</div>
-                <div>Average Wpm: {stats.averageWpm}</div>
-                <div>Average Accuracy: {stats.averageAccuracy}</div>
-            </div>
-        )}
+            {stats === null ? (
+                <div>Loading stats...</div>
+            ) : stats.totalTests === 0 ? (
+                <div>Take some tests first to see your stats.</div>
+            ) : (
+                <div>
+                    <div>Total Tests: {stats.totalTests}</div>
+                    <div>Best WPM: {stats.bestWpm}</div>
+                    <div>Average WPM: {stats.averageWpm}</div>
+                    <div>Average Accuracy: {stats.averageAccuracy}</div>
+                </div>
+            )}
         </>
-    )
+    );
 }

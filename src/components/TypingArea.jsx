@@ -8,30 +8,23 @@ import {
   endTimeState,
 } from '../state/atoms';
 import { charStatusListState, isCompletedState, wpmState, accuracyState } from '../state/selectors';
+import { useNavigate } from "react-router-dom";
+import { apiRequest } from "../api";
 
-async function saveTestResult(wpm, accuracy, timeTaken){
+async function saveTestResult(wpm, accuracy, timeTaken, navigate){
 
-    const token = localStorage.getItem("token");
-    if(!token){
-            console.log("Please login first");
-            return;
-        }
-        
-  const response = await fetch("http://localhost:3000/results",{
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      wpm,
-      accuracy,
-      timeTaken
-    })
-  })
+    const data = await apiRequest("/results",{
+        method: "POST",
+        body: JSON.stringify({
+            wpm,
+            accuracy,
+            timeTaken
+        })
+    }, navigate);
 
-  const data = await response.json();
-  console.log(data);
+    if(!data) return;
+
+    console.log(data);
 }
 
 export default function TypingArea(){
@@ -45,6 +38,8 @@ export default function TypingArea(){
 
     const wpm = useRecoilValue(wpmState);
     const accuracy = useRecoilValue(accuracyState);
+
+    const navigate = useNavigate();
 
     const handleInputChange = (e)=>{
         const value = e.target.value;
@@ -63,7 +58,7 @@ export default function TypingArea(){
 
             const timeTaken = (completedAt-startTime)/1000;
 
-            saveTestResult(wpm, accuracy, timeTaken);
+            saveTestResult(wpm, accuracy, timeTaken, navigate);
         }
     }
 

@@ -56,6 +56,15 @@ router.get("/stats", auth, async (req,res)=>{
         })
 
         const userTotalTests = userTestResults.length;
+        if (userTotalTests === 0) {
+            return res.json({
+                totalTests: 0,
+                bestWpm: 0,
+                averageWpm: 0,
+                averageAccuracy: 0
+            });
+        }
+        
         let userBestWpm = 0;
         let userWpmSum = 0;
         let userAccuracySum = 0;

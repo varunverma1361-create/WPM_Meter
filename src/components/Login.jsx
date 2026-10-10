@@ -31,9 +31,22 @@ export default function Login(){
 
     return(
         <>
-        <input placeholder="Email" value={email} onChange={(e)=> setEmail(e.target.value)}></input>
-        <input placeholder="Password" type="password" value={password} onChange={(e)=> setPassword(e.target.value)}></input>
-        <button onClick={handleLogin}>Login</button>
+        <input
+        className="w-full border border-slate-300 rounded-md px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+         placeholder="Email"
+         value={email} 
+         onChange={(e)=> setEmail(e.target.value)}></input>
+
+        <input 
+        className="w-full border border-slate-300 rounded-md px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Password" 
+        type="password" 
+        value={password} 
+        onChange={(e)=> setPassword(e.target.value)}></input>
+
+        <button 
+        className="w-full bg-blue-600 text-white py-2 rounded-md font-medium hover:bg-blue-700 transition cursor-pointer"
+        onClick={handleLogin}>Login</button>
         </>
     )
 }

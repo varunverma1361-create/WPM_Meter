@@ -1,29 +1,28 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+import { apiRequest } from "../api";
 
 export default function Profile(){
     const [profile, setProfile] = useState(null);
+    const navigate = useNavigate();
 
     async function fetchProfile(){
-        const token = localStorage.getItem("token");
-        if(!token){
-            console.log("Please login first")
-            return;
-        }
+        const data = await apiRequest("/users/profile",{
+            method: "GET"
+        }, navigate);
 
-        const response = await fetch("http://localhost:3000/users/profile",{
-            method: "GET",
-            headers:{
-                "Authorization": `Bearer ${token}`
-            }
-        })
-
-        const data = await response.json();
+        if(!data) return;
+        
         setProfile(data);
     }
 
+    useEffect(()=>{
+        fetchProfile();
+    },[]);
+
     return(
         <>
-        <button onClick={fetchProfile}>Profile</button>
+        {/* <button onClick={fetchProfile}>Profile</button> */}
         {profile && (
             <div>
                 <div>Name: {profile.name}</div>

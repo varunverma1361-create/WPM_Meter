@@ -9,7 +9,9 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
     <RecoilRoot>
+      
       <App />
+      
     </RecoilRoot>
     </BrowserRouter>
   </StrictMode>,

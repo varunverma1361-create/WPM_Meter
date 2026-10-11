@@ -19,7 +19,12 @@ export default function Controls(){
 
     return (
         <div>
-            <button onClick={handleReset}>Reset / New Test</button>
+            <button
+                className="mt-4 bg-slate-800 text-white px-4 py-2 rounded-md hover:bg-slate-900 transition cursor-pointer"
+                onClick={handleReset}
+            >
+                Reset / New Test
+            </button>
         </div>
     )
 }

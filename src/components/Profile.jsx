@@ -20,15 +20,23 @@ export default function Profile(){
         fetchProfile();
     },[]);
 
-    return(
+    return (
         <>
-        {/* <button onClick={fetchProfile}>Profile</button> */}
-        {profile && (
-            <div>
-                <div>Name: {profile.name}</div>
-                <div>Email: {profile.email}</div>
-            </div>
-        )}
+            {profile === null ? (
+                <div className="text-slate-500">Loading profile...</div>
+            ) : (
+                <div className="space-y-3">
+                    <div>
+                        <span className="font-semibold text-slate-700">Name: </span>
+                        <span className="text-slate-600">{profile.name}</span>
+                    </div>
+
+                    <div>
+                        <span className="font-semibold text-slate-700">Email: </span>
+                        <span className="text-slate-600">{profile.email}</span>
+                    </div>
+                </div>
+            )}
         </>
-    )
+    );
 }

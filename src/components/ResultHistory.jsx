@@ -23,19 +23,33 @@ export default function ResultHistory() {
     return (
         <div>
             {history === null ? (
-                <div>Loading history...</div>
+                <div className="text-slate-500">Loading history...</div>
             ) : history.length === 0 ? (
-                <div>No test history yet. Complete a typing test first.</div>
+                <div className="text-slate-500">
+                    No test history yet. Complete a typing test first.
+                </div>
             ) : (
-                history.map((result) => (
-                    <div key={result._id}>
-                        <div>WPM: {result.wpm}</div>
-                        <div>Accuracy: {result.accuracy}</div>
-                        <div>Time Taken: {result.timeTaken} seconds</div>
-                        <div>Date: {new Date(result.createdAt).toLocaleString()}</div>
-                        <hr />
-                    </div>
-                ))
+                <div className="space-y-4">
+                    {history.map((result) => (
+                        <div
+                            key={result._id}
+                            className="border border-slate-200 rounded-lg p-4 bg-slate-50"
+                        >
+                            <div className="font-semibold text-slate-800">
+                                WPM: {result.wpm}
+                            </div>
+                            <div className="text-slate-600">
+                                Accuracy: {result.accuracy}%
+                            </div>
+                            <div className="text-slate-600">
+                                Time Taken: {result.timeTaken} seconds
+                            </div>
+                            <div className="text-sm text-slate-500 mt-2">
+                                {new Date(result.createdAt).toLocaleString()}
+                            </div>
+                        </div>
+                    ))}
+                </div>
             )}
         </div>
     );

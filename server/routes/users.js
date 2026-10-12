@@ -2,15 +2,25 @@ const express = require("express");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
+const {signupSchema, loginSchema} = require("../schemas/userSchemas");
 
 const bcrypt = require("bcrypt");
 
 const router = express.Router();
 //signup (user gets created, password hashed and stored in mongoDB then logs in user by creating and sending jwt token)
 router.post("/", async (req,res)=>{
-    const userName = req.body.name;
-    const userEmail = req.body.email;
-    const userPassword = req.body.password;
+
+    const parsedData = signupSchema.safeParse(req.body);
+
+    if(!parsedData.success){
+        return res.status(400).json({
+            message: parsedData.error.issues[0].message
+        })
+    }
+
+    const userName = parsedData.body.name;
+    const userEmail = parsedData.body.email;
+    const userPassword = parsedData.body.password;
     
 
     try{
@@ -40,8 +50,17 @@ router.post("/", async (req,res)=>{
 });
 //login- first checks if user exists, if yes then generates a jwt token for them
 router.post("/login", async (req,res)=>{
-    const userEmail = req.body.email;
-    const userPassword = req.body.password;
+
+    const parsedData = loginSchema.safeParse(req.body);
+
+    if(!parsedData.success){
+        res.status(400).json({
+            message: parsedData.error.issue[0].message
+        });
+    }
+
+    const userEmail = parsedData.body.email;
+    const userPassword = parsedData.body.password;
 
     try{
         const user = await User.findOne({

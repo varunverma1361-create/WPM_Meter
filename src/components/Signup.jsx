@@ -2,6 +2,9 @@ import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 
 export default function Signup(){
+
+    const [error, setError] = useState("");
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
@@ -22,6 +25,10 @@ export default function Signup(){
 
         const data = await response.json();
         console.log(data);
+
+        if(!response.ok){
+            setError(data.message || "Signup failed");
+        }
 
         if(data.token){
             localStorage.setItem("token", data.token);
@@ -51,6 +58,13 @@ export default function Signup(){
         value={password} 
         type="password" 
         onChange={(e)=> setPassword(e.target.value)}></input>
+
+        {error && (
+            <p className="text-red-500 text-sm mb-3">
+                {error}
+            </p>
+        )}
+
         <button 
         className="w-full bg-blue-600 text-white py-2 rounded-md font-medium hover:bg-blue-700 transition cursor-pointer"
         onClick={handleSignup}>Sign Up</button>

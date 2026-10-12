@@ -18,9 +18,9 @@ router.post("/", async (req,res)=>{
         })
     }
 
-    const userName = parsedData.body.name;
-    const userEmail = parsedData.body.email;
-    const userPassword = parsedData.body.password;
+    const userName = parsedData.data.name;
+    const userEmail = parsedData.data.email;
+    const userPassword = parsedData.data.password;
     
 
     try{
@@ -54,13 +54,13 @@ router.post("/login", async (req,res)=>{
     const parsedData = loginSchema.safeParse(req.body);
 
     if(!parsedData.success){
-        res.status(400).json({
-            message: parsedData.error.issue[0].message
+        return res.status(400).json({
+            message: parsedData.error.issues[0].message
         });
     }
 
-    const userEmail = parsedData.body.email;
-    const userPassword = parsedData.body.password;
+    const userEmail = parsedData.data.email;
+    const userPassword = parsedData.data.password;
 
     try{
         const user = await User.findOne({

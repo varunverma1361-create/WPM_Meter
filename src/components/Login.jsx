@@ -5,35 +5,44 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
     async function handleLogin() {
         setError("");
+        setLoading(true);
 
-        const response = await fetch("http://localhost:3000/users/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email,
-                password
-            })
-        });
+        try{
+            const response = await fetch("http://localhost:3000/users/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            });
 
-        const data = await response.json();
-        console.log(data);
+            const data = await response.json();
+            console.log(data);
 
-        if (!response.ok) {
-            setError(data.message || "Login failed");
-            return;
-        }
+            if (!response.ok) {
+                setError(data.message || "Login failed");
+                return;
+            }
 
-        if (data.token) {
-            localStorage.setItem("token", data.token);
-            console.log("Login successful, token saved");
-            navigate("/test");
+            if (data.token) {
+                localStorage.setItem("token", data.token);
+                console.log("Login successful, token saved");
+                navigate("/test");
+            }
+        } catch(error){
+            console.log(error);
+            setError("Something went wrong");
+        } finally{
+            setLoading(false);
         }
     }
 
@@ -67,8 +76,9 @@ export default function Login() {
             <button
                 className="w-full bg-blue-600 text-white py-2 rounded-md font-medium hover:bg-blue-700 transition cursor-pointer"
                 onClick={handleLogin}
+                disabled={loading}
             >
-                Login
+                {loading ? "Logging in..." : "Login"}
             </button>
         </div>
     );

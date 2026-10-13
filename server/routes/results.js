@@ -35,7 +35,7 @@ router.get("/", auth, async (req,res)=>{
     try{
             const testResults = await TestResult.find({
             userId: req.userId
-        })
+        }).sort({createdAt: -1}).limit(20);
 
         return res.json({
             testResults

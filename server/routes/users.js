@@ -42,6 +42,14 @@ router.post("/", async (req,res)=>{
         })
 
     } catch (error){
+        console.log(error);
+
+        if(error.code === 11000){
+            return res.status(409).json({
+                message: "Account already exists"
+            })
+        }
+
         return res.status(500).json({
             message: "An error occured"
         })

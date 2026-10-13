@@ -8,33 +8,42 @@ export default function Signup(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
 
     async function handleSignup(){
-        const response = await fetch("http://localhost:3000/users",{
-            method: "POST",
-            headers:{
-                "Content-Type": "application/json"
-            }, body: JSON.stringify({
-                name,
-                email,
-                password
-            })
-        });
+        setLoading(true);
+        try{
+            const response = await fetch("http://localhost:3000/users",{
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/json"
+                }, body: JSON.stringify({
+                    name,
+                    email,
+                    password
+                })
+            });
 
-        const data = await response.json();
-        console.log(data);
+            const data = await response.json();
+            console.log(data);
 
-        if(!response.ok){
-            setError(data.message || "Signup failed");
-        }
+            if(!response.ok){
+                setError(data.message || "Signup failed");
+            }
 
-        if(data.token){
-            localStorage.setItem("token", data.token);
-            console.log("Signup successfull, token saved");
+            if(data.token){
+                localStorage.setItem("token", data.token);
+                console.log("Signup successfull, token saved");
 
-            navigate("/test");
+                navigate("/test");
+            }
+        }catch(error){
+            console.log(error);
+            setError("Something went wrong");
+        }finally{
+            setLoading(false);
         }
     }
 
@@ -67,7 +76,9 @@ export default function Signup(){
 
         <button 
         className="w-full bg-blue-600 text-white py-2 rounded-md font-medium hover:bg-blue-700 transition cursor-pointer"
-        onClick={handleSignup}>Sign Up</button>
+        onClick={handleSignup}
+        disabled={loading}
+        >{loading ? "Signing up..." : "Signup"}</button>
         </>
     )
 }

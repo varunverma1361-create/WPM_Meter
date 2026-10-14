@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {BASE_URL} from "../api";
 
 export default function Signup(){
 
@@ -15,7 +16,7 @@ export default function Signup(){
     async function handleSignup(){
         setLoading(true);
         try{
-            const response = await fetch("http://localhost:3000/users",{
+            const response = await fetch(`${BASE_URL}/users`,{
                 method: "POST",
                 headers:{
                     "Content-Type": "application/json"
